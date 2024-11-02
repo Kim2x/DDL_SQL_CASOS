@@ -1,0 +1,150 @@
+-- Criação do schema da loja
+CREATE SCHEMA inova_tech;
+
+USE inova_tech;
+
+-- Tabela de Clientes
+CREATE TABLE Clientes (
+    cliente_id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    cpf CHAR(11) NOT NULL UNIQUE,
+    data_nascimento DATE NOT NULL,
+    endereco VARCHAR(200),
+    telefone VARCHAR(15),
+    fidelidade BOOLEAN DEFAULT FALSE
+);
+
+-- Tabela de Fornecedores
+CREATE TABLE Fornecedores (
+    fornecedor_id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    cnpj CHAR(14) NOT NULL UNIQUE,
+    endereco VARCHAR(200),
+    telefone VARCHAR(15),
+    email VARCHAR(100)
+);
+
+-- Tabela de Produtos
+CREATE TABLE Produtos (
+    produto_id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    categoria VARCHAR(50),
+    preco DECIMAL(10, 2) NOT NULL,
+    estoque INT DEFAULT 0,
+    fornecedor_id INT,
+    FOREIGN KEY (fornecedor_id) REFERENCES Fornecedores(fornecedor_id)
+);
+
+-- Tabela de Vendas
+CREATE TABLE Vendas (
+    venda_id INT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id INT NOT NULL,
+    data_venda DATE NOT NULL,
+    forma_pagamento ENUM('dinheiro', 'cartão', 'transferência') NOT NULL,
+    valor_total DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (cliente_id) REFERENCES Clientes(cliente_id)
+);
+
+-- Tabela de Itens da Venda (relação Vendas - Produtos)
+CREATE TABLE Itens_Venda (
+    item_id INT AUTO_INCREMENT PRIMARY KEY,
+    venda_id INT NOT NULL,
+    produto_id INT NOT NULL,
+    quantidade INT NOT NULL,
+    preco_unitario DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (venda_id) REFERENCES Vendas(venda_id),
+    FOREIGN KEY (produto_id) REFERENCES Produtos(produto_id)
+);
+
+-- Tabela de Pagamentos
+CREATE TABLE Pagamentos (
+    pagamento_id INT AUTO_INCREMENT PRIMARY KEY,
+    venda_id INT NOT NULL,
+    data_pagamento DATE,
+    valor DECIMAL(10, 2) NOT NULL,
+    status ENUM('pago', 'pendente') DEFAULT 'pendente',
+    FOREIGN KEY (venda_id) REFERENCES Vendas(venda_id)
+);
+-- Tabela Clientes
+-- Adicionar coluna
+ALTER TABLE Clientes ADD email VARCHAR(100);
+
+-- Remover coluna
+ALTER TABLE Clientes DROP COLUMN fidelidade;
+
+-- Modificar coluna
+ALTER TABLE Clientes MODIFY telefone VARCHAR(20);
+
+-- Renomear coluna
+ALTER TABLE Clientes CHANGE endereco endereco_residencial VARCHAR(200);
+
+-- Tabela Fornecedores
+-- Adicionar coluna
+ALTER TABLE Fornecedores ADD site VARCHAR(100);
+
+-- Remover coluna
+ALTER TABLE Fornecedores DROP COLUMN telefone;
+
+-- Modificar coluna
+ALTER TABLE Fornecedores MODIFY email VARCHAR(150);
+
+-- Renomear coluna
+ALTER TABLE Fornecedores CHANGE endereco endereco_comercial VARCHAR(200);
+
+-- Tabela Produtos
+-- Adicionar coluna
+ALTER TABLE Produtos ADD descricao TEXT;
+
+-- Remover coluna
+ALTER TABLE Produtos DROP COLUMN estoque;
+
+-- Modificar coluna
+ALTER TABLE Produtos MODIFY preco DECIMAL(12, 2);
+
+-- Renomear coluna
+ALTER TABLE Produtos CHANGE categoria tipo_produto VARCHAR(50);
+
+-- Tabela Vendas
+-- Adicionar coluna
+ALTER TABLE Vendas ADD desconto DECIMAL(10, 2);
+
+-- Remover coluna
+ALTER TABLE Vendas DROP COLUMN valor_total;
+
+-- Modificar coluna
+ALTER TABLE Vendas MODIFY forma_pagamento ENUM('dinheiro', 'cartão', 'transferência', 'pix');
+
+-- Renomear coluna
+ALTER TABLE Vendas CHANGE forma_pagamento metodo_pagamento ENUM('dinheiro', 'cartão', 'transferência', 'pix');
+
+-- Tabela Itens_Venda
+-- Adicionar coluna
+ALTER TABLE Itens_Venda ADD desconto DECIMAL(5, 2);
+
+-- Remover coluna
+ALTER TABLE Itens_Venda DROP COLUMN preco_unitario;
+
+-- Modificar coluna
+ALTER TABLE Itens_Venda MODIFY quantidade INT DEFAULT 1;
+
+-- Renomear coluna
+ALTER TABLE Itens_Venda CHANGE quantidade qtd INT;
+
+-- Tabela Pagamentos
+-- Adicionar coluna
+ALTER TABLE Pagamentos ADD metodo_pagamento ENUM('dinheiro', 'cartão', 'transferência', 'pix');
+
+-- Remover coluna
+ALTER TABLE Pagamentos DROP COLUMN status;
+
+-- Modificar coluna
+ALTER TABLE Pagamentos MODIFY valor DECIMAL(12, 2);
+
+-- Renomear coluna
+ALTER TABLE Pagamentos CHANGE data_pagamento data DATE;
+DROP TABLE IF EXISTS inova_tech.Pagamentos;
+DROP TABLE IF EXISTS inova_tech.Itens_Venda;
+DROP TABLE IF EXISTS inova_tech.Vendas;
+DROP TABLE IF EXISTS inova_tech.Produtos;
+DROP TABLE IF EXISTS inova_tech.Fornecedores;
+DROP TABLE IF EXISTS inova_tech.Clientes;
