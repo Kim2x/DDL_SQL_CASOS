@@ -1,0 +1,223 @@
+-- 1. Tabela CLIENTES
+CREATE TABLE Clientes (
+    codigo INT PRIMARY KEY,
+    cnpj CHAR(18) NOT NULL,
+    razao_social VARCHAR(100),
+    ramo_atividade VARCHAR(100),
+    data_cadastro DATE,
+    pessoa_contato VARCHAR(100)
+);
+
+-- 2. Tabela EMPREGADOS
+CREATE TABLE Empregados (
+    matricula INT PRIMARY KEY,
+    nome VARCHAR(100),
+    cargo VARCHAR(100),
+    salario DECIMAL(15, 2),
+    data_admissao DATE,
+    endereco VARCHAR(200)
+);
+
+-- 3. Tabela EMPRESAS
+CREATE TABLE Empresas (
+    cnpj CHAR(18) PRIMARY KEY,
+    razao_social VARCHAR(100),
+    pessoa_contato VARCHAR(100),
+    endereco VARCHAR(200)
+);
+
+-- 4. Tabela FORNECEDORES
+CREATE TABLE Fornecedores (
+    cnpj CHAR(18) PRIMARY KEY,
+    razao_social VARCHAR(100),
+    endereco VARCHAR(200),
+    pessoa_contato VARCHAR(100)
+);
+
+-- 5. Tabela TIPO_DE_ENDERECO
+CREATE TABLE Tipo_De_Endereco (
+    codigo INT PRIMARY KEY,
+    nome VARCHAR(50)
+);
+
+-- 6. Tabela ENDERECOS
+CREATE TABLE Enderecos (
+    numero INT,
+    logradouro VARCHAR(100),
+    complemento VARCHAR(100),
+    cep CHAR(9),
+    bairro VARCHAR(50),
+    cidade VARCHAR(50),
+    estado CHAR(2)
+);
+
+-- 7. Tabela ENCOMENDAS
+CREATE TABLE Encomendas (
+    numero INT PRIMARY KEY,
+    data_inclusao DATE,
+    valor_total DECIMAL(15, 2),
+    valor_desconto DECIMAL(15, 2),
+    valor_liquido DECIMAL(15, 2),
+    id_forma_pagamento INT,
+    quantidade_parcelas INT
+);
+
+-- 8. Tabela PRODUTOS
+CREATE TABLE Produtos (
+    codigo INT PRIMARY KEY,
+    nome VARCHAR(100),
+    cor VARCHAR(50),
+    dimensoes VARCHAR(100),
+    peso DECIMAL(10, 2),
+    preco DECIMAL(15, 2),
+    tempo_fabricacao INT,
+    desenho_produto BLOB,
+    horas_mao_obra INT
+);
+
+-- 9. Tabela TIPOS_DE_COMPONENTE
+CREATE TABLE Tipos_De_Componente (
+    codigo INT PRIMARY KEY,
+    nome VARCHAR(50)
+);
+
+-- 10. Tabela COMPONENTES
+CREATE TABLE Componentes (
+    codigo INT PRIMARY KEY,
+    nome VARCHAR(100),
+    quantidade_estoque INT,
+    preco_unitario DECIMAL(10, 2),
+    unidade VARCHAR(20)
+);
+
+-- 11. Tabela MAQUINAS
+CREATE TABLE Maquinas (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    tempo_vida INT,
+    data_compra DATE,
+    data_fim_garantia DATE
+);
+
+-- 12. Tabela RECURSOS_ESPECIFICOS (RE)
+CREATE TABLE Recursos_Especificos (
+    quantidade_necessaria INT,
+    unidade VARCHAR(20),
+    tempo_uso INT,
+    horas_mao_obra INT
+);
+
+-- 13. Tabela REGISTRO_MANUTENCAO (RM)
+CREATE TABLE Registro_Manutencao (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    data DATE,
+    descricao TEXT
+);
+
+-- 14. Tabela REGISTRO_SUPRIMENTOS (RS)
+CREATE TABLE Registro_Suprimentos (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    quantidade INT,
+    data_necessidade DATE
+);
+-- ADD: Adiciona coluna 'email'.
+ALTER TABLE Clientes ADD email VARCHAR(100);
+
+-- DROP: Remove a coluna 'ramo_atividade'.
+ALTER TABLE Clientes DROP COLUMN ramo_atividade;
+
+-- MODIFY: Modifica o tamanho do campo 'razao_social'.
+ALTER TABLE Clientes MODIFY razao_social VARCHAR(150);
+
+-- CHANGE: Renomeia a coluna 'pessoa_contato' para 'contato_principal'.
+ALTER TABLE Clientes CHANGE pessoa_contato contato_principal VARCHAR(100);
+-- ADD: Adiciona coluna 'email'.
+ALTER TABLE Empregados ADD email VARCHAR(100);
+
+-- DROP: Remove a coluna 'cargo'.
+ALTER TABLE Empregados DROP COLUMN cargo;
+
+-- MODIFY: Modifica o tipo de dados do campo 'salario'.
+ALTER TABLE Empregados MODIFY salario DECIMAL(20, 2);
+
+-- CHANGE: Renomeia a coluna 'endereco' para 'endereco_residencial'.
+ALTER TABLE Empregados CHANGE endereco endereco_residencial VARCHAR(200);
+-- ADD: Adiciona coluna 'telefone'.
+ALTER TABLE Empresas ADD telefone VARCHAR(15);
+
+-- DROP: Remove a coluna 'pessoa_contato'.
+ALTER TABLE Empresas DROP COLUMN pessoa_contato;
+
+-- MODIFY: Aumenta o tamanho do campo 'razao_social'.
+ALTER TABLE Empresas MODIFY razao_social VARCHAR(200);
+
+-- CHANGE: Renomeia a coluna 'endereco' para 'endereco_sede'.
+ALTER TABLE Empresas CHANGE endereco endereco_sede VARCHAR(200);
+-- ADD: Adiciona coluna 'email'.
+ALTER TABLE Fornecedores ADD email VARCHAR(100);
+
+-- DROP: Remove a coluna 'pessoa_contato'.
+ALTER TABLE Fornecedores DROP COLUMN pessoa_contato;
+
+-- MODIFY: Modifica o tipo de dados do campo 'razao_social'.
+ALTER TABLE Fornecedores MODIFY razao_social VARCHAR(150);
+
+-- CHANGE: Renomeia a coluna 'endereco' para 'endereco_fornecedor'.
+ALTER TABLE Fornecedores CHANGE endereco endereco_fornecedor VARCHAR(200);
+-- ADD: Adiciona coluna 'descricao'.
+ALTER TABLE Tipo_De_Endereco ADD descricao VARCHAR(100);
+
+-- DROP: Remove a coluna 'nome'.
+ALTER TABLE Tipo_De_Endereco DROP COLUMN nome;
+
+-- MODIFY: Modifica o tamanho do campo 'descricao'.
+ALTER TABLE Tipo_De_Endereco MODIFY descricao VARCHAR(150);
+
+-- CHANGE: Renomeia a coluna 'codigo' para 'id_tipo_endereco'.
+ALTER TABLE Tipo_De_Endereco CHANGE codigo id_tipo_endereco INT;
+-- ADD: Adiciona coluna 'tipo'.
+ALTER TABLE Enderecos ADD tipo VARCHAR(20);
+
+-- DROP: Remove a coluna 'complemento'.
+ALTER TABLE Enderecos DROP COLUMN complemento;
+
+-- MODIFY: Modifica o tamanho do campo 'cidade'.
+ALTER TABLE Enderecos MODIFY cidade VARCHAR(100);
+
+-- CHANGE: Renomeia a coluna 'bairro' para 'area'.
+ALTER TABLE Enderecos CHANGE bairro area VARCHAR(50);
+-- ADD: Adiciona coluna 'observacao'.
+ALTER TABLE Encomendas ADD observacao TEXT;
+
+-- DROP: Remove a coluna 'quantidade_parcelas'.
+ALTER TABLE Encomendas DROP COLUMN quantidade_parcelas;
+
+-- MODIFY: Modifica o tamanho do campo 'valor_total'.
+ALTER TABLE Encomendas MODIFY valor_total DECIMAL(20, 2);
+
+-- CHANGE: Renomeia a coluna 'data_inclusao' para 'data_pedido'.
+ALTER TABLE Encomendas CHANGE data_inclusao data_pedido DATE;
+-- ADD: Adiciona coluna 'categoria'.
+ALTER TABLE Produtos ADD categoria VARCHAR(50);
+
+-- DROP: Remove a coluna 'cor'.
+ALTER TABLE Produtos DROP COLUMN cor;
+
+-- MODIFY: Modifica o tipo de dados do campo 'peso'.
+ALTER TABLE Produtos MODIFY peso DECIMAL(12, 2);
+
+-- CHANGE: Renomeia a coluna 'preco' para 'preco_unitario'.
+ALTER TABLE Produtos CHANGE preco preco_unitario DECIMAL(15, 2);
+DROP TABLE Clientes;
+DROP TABLE Empregados;
+DROP TABLE Empresas;
+DROP TABLE Fornecedores;
+DROP TABLE Tipo_De_Endereco;
+DROP TABLE Enderecos;
+DROP TABLE Encomendas;
+DROP TABLE Produtos;
+DROP TABLE Tipos_De_Componente;
+DROP TABLE Componentes;
+DROP TABLE Maquinas;
+DROP TABLE Recursos_Especificos;
+DROP TABLE Registro_Manutencao;
+DROP TABLE Registro_Suprimentos;
