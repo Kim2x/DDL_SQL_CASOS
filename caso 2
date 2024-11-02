@@ -1,0 +1,77 @@
+-- Tabela Passageiro
+CREATE TABLE Passageiro (
+    cpf VARCHAR(11) PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    telefone VARCHAR(15),
+    endereco VARCHAR(200)
+);
+
+-- Tabela Aeroporto
+CREATE TABLE Aeroporto (
+    codigo_aeroporto CHAR(3) PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    cidade VARCHAR(50),
+    pais VARCHAR(50)
+);
+
+-- Tabela Voo
+CREATE TABLE Voo (
+    codigo_voo CHAR(6) PRIMARY KEY,
+    origem CHAR(3) NOT NULL,
+    destino CHAR(3) NOT NULL,
+    horario_partida DATETIME NOT NULL,
+    horario_chegada DATETIME NOT NULL,
+    codigo_aeronave INT,
+    FOREIGN KEY (origem) REFERENCES Aeroporto(codigo_aeroporto),
+    FOREIGN KEY (destino) REFERENCES Aeroporto(codigo_aeroporto)
+);
+
+-- Tabela Aeronave
+CREATE TABLE Aeronave (
+    codigo_aeronave INT PRIMARY KEY,
+    modelo VARCHAR(50) NOT NULL,
+    capacidade INT NOT NULL
+);
+
+-- Tabela Funcionario
+CREATE TABLE Funcionario (
+    id_funcionario INT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    funcao ENUM('Piloto', 'Comissario', 'Equipe de Solo') NOT NULL,
+    telefone VARCHAR(15),
+    endereco VARCHAR(200)
+);
+
+-- Tabela Reserva
+CREATE TABLE Reserva (
+    id_reserva INT PRIMARY KEY,
+    cpf_passageiro VARCHAR(11) NOT NULL,
+    codigo_voo CHAR(6) NOT NULL,
+    data_reserva DATE NOT NULL,
+    FOREIGN KEY (cpf_passageiro) REFERENCES Passageiro(cpf),
+    FOREIGN KEY (codigo_voo) REFERENCES Voo(codigo_voo)
+);
+
+-- Tabela OperacaoVoo
+CREATE TABLE OperacaoVoo (
+    id_operacao INT PRIMARY KEY,
+    codigo_voo CHAR(6) NOT NULL,
+    id_funcionario INT NOT NULL,
+    funcao VARCHAR(50),
+    FOREIGN KEY (codigo_voo) REFERENCES Voo(codigo_voo),
+    FOREIGN KEY (id_funcionario) REFERENCES Funcionario(id_funcionario)
+);
+ALTER TABLE Passageiro ADD email VARCHAR(100);
+ALTER TABLE Passageiro DROP COLUMN telefone;
+ALTER TABLE Passageiro MODIFY endereco VARCHAR(300);
+ALTER TABLE Passageiro CHANGE nome nome_completo VARCHAR(100);
+);
+ALTER TABLE Aeroporto ADD estado VARCHAR(50);
+ALTER TABLE Aeroporto DROP COLUMN pais;
+ALTER TABLE Aeroporto MODIFY cidade VARCHAR(100);
+ALTER TABLE Aeroporto CHANGE nome nome_aeroporto VARCHAR(100);
+ALTER TABLE Voo ADD terminal_partida VARCHAR(10);
+ALTER TABLE Voo DROP COLUMN horario_chegada;
+ALTER TABLE Voo MODIFY horario_partida TIMESTAMP WITH TIME ZONE;
+ALTER TABLE Voo CHANGE codigo_voo identificador_voo CHAR(6);
+DROP TABLE OperacaoVoo;
